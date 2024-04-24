@@ -19,7 +19,6 @@
       :loading="loading"
       item-key="id"
       hover
-      single-select
       show-expand
       @click:row="rowClick"
     >
@@ -47,7 +46,7 @@
                 <v-icon :icon="getSortIcon(column)" size="small" color="grey" />
               </template>
               <v-icon
-                v-if="index !== columns.length - 1 && column.title"
+                v-if="columns[index + 1]?.title"
                 icon="mdi-chevron-right"
                 size="x-small"
                 color="grey"
