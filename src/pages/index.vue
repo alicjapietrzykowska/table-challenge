@@ -23,6 +23,40 @@
       show-expand
       @click:row="rowClick"
     >
+      <template v-slot:headers="{ columns, isSorted, getSortIcon, toggleSort }">
+        <tr>
+          <template
+            v-for="(column, index) in columns"
+            :key="column?.key || index"
+          >
+            <td>
+              <v-icon
+                v-if="index !== 0 && column.title"
+                icon="mdi-chevron-left"
+                size="x-small"
+                color="grey"
+                @click="swapPosition(index, 'prev')"
+              />
+              <span
+                class="mx-2 cursor-pointer"
+                @click="() => toggleSort(column)"
+              >
+                {{ column.title }}
+              </span>
+              <template v-if="isSorted(column)">
+                <v-icon :icon="getSortIcon(column)" size="small" color="grey" />
+              </template>
+              <v-icon
+                v-if="index !== columns.length - 1 && column.title"
+                icon="mdi-chevron-right"
+                size="x-small"
+                color="grey"
+                @click="swapPosition(index, 'next')"
+              />
+            </td>
+          </template>
+        </tr>
+      </template>
       <template v-slot:item.contact_channel="{ value }">
         <v-icon :icon="getChannelIcon(value)" />
         {{ value }}
@@ -71,7 +105,7 @@ const tickets = computed(() => store.sortedTicketData);
 
 const search = ref("");
 
-const headers = [
+const initialHeaders = [
   { key: "id", title: "ID" },
   { key: "customer.first_name", title: "First name" },
   { key: "customer.last_name", title: "Last name" },
@@ -82,10 +116,26 @@ const headers = [
   { key: "status", title: "Status" },
 ];
 
+const headers = ref(initialHeaders);
+
 const rowClick = (event: Event, row: any) => {
   const clickedRowId = row.item.id;
 
   router.push(`/${clickedRowId}`);
+};
+
+const swapPosition = (index: number, direction: "next" | "prev") => {
+  const swapElements = (array: any[], index1: number, index2: number) => {
+    console.log(array[index2]);
+    if (!array[index2]) return;
+    array[index1] = array.splice(index2, 1, array[index1])[0];
+  };
+
+  if (direction === "next") {
+    swapElements(headers.value, index, index + 1);
+  } else {
+    swapElements(headers.value, index, index - 1);
+  }
 };
 
 const getStatusColor = (status: string) => {

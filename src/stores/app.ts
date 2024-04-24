@@ -34,7 +34,7 @@ export const useAppStore = defineStore("app", {
     },
 
     getTicketDetailsById: (
-      state
+      state: State
     ): ((T: string | number) => Ticket | undefined) => {
       return (ticketId: string | number): Ticket | undefined =>
         state.ticketData.find((ticket) => String(ticket.id) === ticketId);

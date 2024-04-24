@@ -9,13 +9,13 @@
     <template v-slot:title>
       <div class="d-flex mb-3">
         <router-link to="/" class="mr-5">
-          <v-btn icon="mdi-arrow-left"></v-btn>
+          <v-icon icon="mdi-arrow-left" color="grey" />
         </router-link>
         <h2 class="ml-5">{{ title }}</h2>
       </div>
     </template>
 
-    <v-sheet class="d-flex gap-3 justify-space-between">
+    <v-sheet class="d-sm-flex gap-3 justify-space-between">
       <section class="px-5 py-3">
         <h3>Customer data</h3>
         <div class="my-3">
@@ -104,7 +104,7 @@ const { formatDate } = useUtils();
 const currentId = route.params.id;
 const ticketData = getTicketDetailsById.value(currentId);
 const customerData = computed<Customer>(() => ticketData.customer);
-const title = computed(() => `Ticket nr ${currentId}`);
+const title = computed<string>(() => `Ticket nr ${currentId}`);
 </script>
 
 <style scoped></style>
