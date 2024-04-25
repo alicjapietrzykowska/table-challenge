@@ -1,6 +1,7 @@
 export interface State {
   isLoading: boolean;
   ticketData: Ticket[];
+  searchTerm?: string;
 }
 
 export interface Ticket {

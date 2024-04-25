@@ -1,4 +1,3 @@
-// Utilities
 import axios from "axios";
 import { defineStore } from "pinia";
 import { State, Ticket } from "@/types";
@@ -7,6 +6,7 @@ export const useAppStore = defineStore("app", {
   state: (): State => ({
     isLoading: false,
     ticketData: [],
+    searchTerm: "",
   }),
 
   actions: {
@@ -23,6 +23,10 @@ export const useAppStore = defineStore("app", {
         this.isLoading = false;
       }
     },
+
+    setSearchTerm(searchTerm: string): void {
+      this.searchTerm = searchTerm;
+    },
   },
 
   getters: {
@@ -31,6 +35,15 @@ export const useAppStore = defineStore("app", {
         (a, b) =>
           new Date(a.due_date).getTime() - new Date(b.due_date).getTime()
       );
+    },
+
+    getAllStatuses(state): string[] {
+      return state.ticketData.reduce((unique: number[], ticket) => {
+        if (ticket.status && !unique.includes(ticket.status)) {
+          unique.push(ticket.status);
+        }
+        return unique;
+      }, []);
     },
 
     getTicketDetailsById: (
