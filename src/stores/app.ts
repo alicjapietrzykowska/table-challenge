@@ -5,8 +5,9 @@ import { State, Ticket } from "@/types";
 export const useAppStore = defineStore("app", {
   state: (): State => ({
     isLoading: false,
-    ticketData: [],
+    initialTicketData: [],
     searchTerm: "",
+    filteredTickets: [],
   }),
 
   actions: {
@@ -15,7 +16,8 @@ export const useAppStore = defineStore("app", {
 
       try {
         const { data } = await axios.get("MOCK_DATA.json");
-        this.ticketData = data;
+        this.initialTicketData = data;
+        this.filteredTickets = data;
       } catch (error) {
         console.error(error);
         return error;
@@ -27,18 +29,21 @@ export const useAppStore = defineStore("app", {
     setSearchTerm(searchTerm: string): void {
       this.searchTerm = searchTerm;
     },
+
+    setFilteredTickets(filters: string[], param: keyof Ticket): void {
+      if (!filters.length) {
+        this.filteredTickets = this.initialTicketData;
+        return;
+      }
+      this.filteredTickets = this.initialTicketData.filter((ticket) =>
+        filters.includes(ticket[param])
+      );
+    },
   },
 
   getters: {
-    sortedTicketData(state): Ticket[] {
-      return [...state.ticketData].sort(
-        (a, b) =>
-          new Date(a.due_date).getTime() - new Date(b.due_date).getTime()
-      );
-    },
-
-    getAllStatuses(state): string[] {
-      return state.ticketData.reduce((unique: number[], ticket) => {
+    getAllContactChannels(state): string[] {
+      return state.initialTicketData.reduce((unique: number[], ticket) => {
         if (ticket.status && !unique.includes(ticket.status)) {
           unique.push(ticket.status);
         }
@@ -46,11 +51,23 @@ export const useAppStore = defineStore("app", {
       }, []);
     },
 
+    getAllUniqueFields: (state: State): ((param: keyof Ticket) => string[]) => {
+      return (ticketParam: keyof Ticket): string[] =>
+        state.initialTicketData.reduce((unique: number[], ticket) => {
+          if (ticket[ticketParam] && !unique.includes(ticket[ticketParam])) {
+            unique.push(ticket[ticketParam]);
+          }
+          return unique;
+        }, []);
+    },
+
     getTicketDetailsById: (
       state: State
     ): ((T: string | number) => Ticket | undefined) => {
       return (ticketId: string | number): Ticket | undefined =>
-        state.ticketData.find((ticket) => String(ticket.id) === ticketId);
+        state.initialTicketData.find(
+          (ticket) => String(ticket.id) === ticketId
+        );
     },
   },
 });

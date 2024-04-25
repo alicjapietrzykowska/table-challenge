@@ -24,7 +24,7 @@
               color="grey"
               @click="swapPosition(index, 'prev')"
             />
-            <span class="mx-2 cursor-pointer" @click="() => toggleSort(column)">
+            <span class="cursor-pointer" @click="() => toggleSort(column)">
               {{ column.title }}
             </span>
             <template v-if="isSorted(column)">
@@ -84,7 +84,7 @@ const router = useRouter();
 const { formatDate } = useUtils();
 
 const loading = computed(() => store.isLoading);
-const tickets = computed(() => store.sortedTicketData);
+const tickets = computed(() => store.filteredTickets);
 const search = computed(() => store.searchTerm);
 
 const initialHeaders = [
