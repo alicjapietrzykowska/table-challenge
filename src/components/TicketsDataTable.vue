@@ -74,9 +74,9 @@
 </template>
 
 <script setup lang="ts">
-import { useAppStore } from "@/stores/app";
-import { useRouter } from "vue-router";
 import { computed, ref } from "vue";
+import { useRouter } from "vue-router";
+import { useAppStore } from "@/stores/app";
 import { useUtils } from "@/composables/useUtils";
 
 const store = useAppStore();

@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex">
+  <div class="d-flex align-center">
     <v-text-field
       v-model.trim="search"
       label="Search"
@@ -11,7 +11,15 @@
     />
     <v-menu v-model="menu" :close-on-content-click="false" location="end">
       <template v-slot:activator="{ props }">
-        <v-btn color="primary" icon="mdi-filter" class="ml-5" v-bind="props" />
+        <v-btn
+          color="primary"
+          prepend-icon="mdi-filter"
+          class="ml-5"
+          size="large"
+          v-bind="props"
+        >
+          Filters
+        </v-btn>
       </template>
 
       <v-card min-width="400">
@@ -53,8 +61,8 @@
 </template>
 
 <script setup lang="ts">
-import { useAppStore } from "@/stores/app";
 import { ref } from "vue";
+import { useAppStore } from "@/stores/app";
 
 const store = useAppStore();
 
