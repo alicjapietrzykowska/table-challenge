@@ -25,3 +25,14 @@ export interface Customer {
   phone: string;
   birthday: string;
 }
+
+export interface Column {
+  key: string;
+  title: string;
+}
+
+export interface Row {
+  item: { id: string };
+}
+
+export type DirectionType = "next" | "prev";

@@ -12,7 +12,6 @@ import { defineConfig } from "vite";
 import { fileURLToPath, URL } from "node:url";
 
 export default defineConfig({
-  base: process.env.NODE_ENV === "production" ? "/table-challenge/" : "/",
   plugins: [
     VueRouter({
       dts: "src/typed-router.d.ts",

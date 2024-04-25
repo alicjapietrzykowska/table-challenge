@@ -3,8 +3,8 @@
     :headers="headers"
     :items="tickets"
     :search="search"
-    loading-text="Loading... Please wait"
     :loading="loading"
+    loading-text="Loading... Please wait"
     item-key="id"
     hover
     show-expand
@@ -74,20 +74,21 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, reactive } from "vue";
 import { useRouter } from "vue-router";
 import { useAppStore } from "@/stores/app";
 import { useUtils } from "@/composables/useUtils";
+import { Column, DirectionType, Row } from "@/stores/types";
 
 const store = useAppStore();
 const router = useRouter();
-const { formatDate } = useUtils();
+const { formatDate, swapArrayElements } = useUtils();
 
 const loading = computed(() => store.isLoading);
 const tickets = computed(() => store.filteredTickets);
 const search = computed(() => store.searchTerm);
 
-const initialHeaders = [
+const headers = reactive<Column>([
   { key: "id", title: "ID" },
   { key: "customer.first_name", title: "First name" },
   { key: "customer.last_name", title: "Last name" },
@@ -96,30 +97,23 @@ const initialHeaders = [
   { key: "interaction_creation_date", title: "Creation date" },
   { key: "due_date", title: "Due date" },
   { key: "status", title: "Status" },
-];
+]);
 
-const headers = ref(initialHeaders);
-
-const rowClick = (event: Event, row: any) => {
+const rowClick = (event: Event, row: Row): void => {
   const clickedRowId = row.item.id;
 
   router.push(`/${clickedRowId}`);
 };
 
-const swapPosition = (index: number, direction: "next" | "prev") => {
-  const swapElements = (array: any[], index1: number, index2: number) => {
-    if (!array[index2]) return;
-    array[index1] = array.splice(index2, 1, array[index1])[0];
-  };
-
+const swapPosition = (index: number, direction: DirectionType): void => {
   if (direction === "next") {
-    swapElements(headers.value, index, index + 1);
+    swapArrayElements(headers, index, index + 1);
   } else {
-    swapElements(headers.value, index, index - 1);
+    swapArrayElements(headers, index, index - 1);
   }
 };
 
-const getStatusColor = (status: string) => {
+const getStatusColor = (status: string): string => {
   switch (status) {
     case "waiting":
       return "deep-purple";
@@ -136,7 +130,7 @@ const getStatusColor = (status: string) => {
   }
 };
 
-const getChannelIcon = (channel: string) => {
+const getChannelIcon = (channel: string): string => {
   switch (channel) {
     case "facebook":
       return "mdi-facebook";
